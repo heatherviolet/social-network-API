@@ -13,6 +13,11 @@ const UserSchema = new Schema(
         unique: true,
         required: 'Email is required!',
         match: [/.+@.+\..+/]
+    },
+    thoughts: { 
+        type: Schema.Types.ObjectId,
+        ref: 'Thought'
+        
     }
 });
 
