@@ -14,6 +14,8 @@ const UserSchema = new Schema(
         required: 'Email is required!',
         match: [/.+@.+\..+/]
     }
-})
+});
+
+const User = model('User', UserSchema);
 
 module.exports = User;
