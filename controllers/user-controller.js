@@ -4,10 +4,6 @@ const userController = {
     // get all users
     getAllUsers(req, res) {
         User.find({})
-        .populate({ 
-            path: 'users',
-            select: '-__v'
-        })
         .select('__v')
         .sort({ _id: -1 })
         .then(dbUserData => res.json(dbUserData))
@@ -19,20 +15,14 @@ const userController = {
     // get one user by id and populated friend and thought data
     getOneUser({ params }, res) {
         User.findOne({ _id: params.id })
-        .then(dbUserData => {
-            // if no user is found send 404
-            if (!dbPizzaData) {
-                res.status(404).json({ message: 'No user found with this id!'});
-                return;
-            }
-            res.json(dbUserData);
-        })
+        .select('-__v')
+        .then(dbUserData => res.json(dbUserData))
         .catch(err => {
             console.log(err);
             res.status(400).json(err);
         });
     },
-    // creat user 
+    // create user 
     createUser({ body }, res) {
         User.create(body)
         .then(dbUserData => res.json(dbUserData))
