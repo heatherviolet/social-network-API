@@ -43,14 +43,31 @@ const thoughtController = {
       })
       .catch(err => res.json(err));
   }, 
+    // update thought
+    updateThought({ params, body }, res) {
+        Thought.findOneAndUpdate({ _id: params.id }, body, { new: true, runValidators: true })
+          .then(dbUserData => {
+            if (!dbUserData) {
+              res.status(404).json({ message: 'No user found with this id!' });
+              return;
+            }
+            res.json(dbUserData);
+          })
+          .catch(err => res.json(err));
+      },
 // add reaction to thought 
 addReaction({ params, body }, res) {
-    Thought.findOneAndUpdate(
-      { _id: params.thoughtId },
-      { $push: { replies: body } },
-      { new: true, runValidators: true }
-    )
+    console.log(params);
+    Thought.create(body)
+      .then(({ _id }) => {
+        return Thought.findOneAndUpdate(
+          { _id: params.userId },
+          { $push: { thought: _id } },
+          { new: true }
+        );
+      })
       .then(dbUserData => {
+        console.log(dbUserData);
         if (!dbUserData) {
           res.status(404).json({ message: 'No user found with this id!' });
           return;
